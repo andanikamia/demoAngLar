@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +30,6 @@ export class LoginComponent implements OnInit {
   }
 
   handleError(error){
-    this.error = error.error.error;
+    this.errors = error.error.error;
   }
 }
