@@ -12,6 +12,11 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RequestResetComponent } from './components/password/request-reset/request-reset.component';
 import { ResponseResetComponent } from './components/password/response-reset/response-reset.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
+import { TokenService } from './Services/token.service';
+import { AuthService } from './Services/auth.service';
+import { AfterLoginService } from './Services/after-login.service';
+import { BeforeLoginService } from './Services/before-login.service';
 
 @NgModule({
   declarations: [
@@ -27,9 +32,18 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SnotifyModule
   ],
-  providers: [JarwisService],
+  providers: [
+    JarwisService,
+    TokenService,
+    AuthService,
+    AfterLoginService,
+    BeforeLoginService,
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

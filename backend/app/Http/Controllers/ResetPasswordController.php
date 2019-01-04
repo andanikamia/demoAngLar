@@ -7,7 +7,7 @@ use App\User;
 use Symfony\Component\HttpFoundation\Response;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\DB;
 
 class ResetPasswordController extends Controller
 {
@@ -21,7 +21,29 @@ class ResetPasswordController extends Controller
     }
 
     public function send($email){
-        Mail::to($email)->send(new ResetPasswordMail);
+        $token = $this->createToken($email);
+        Mail::to($email)->send(new ResetPasswordMail($token));
+    }
+
+    public function createToken($email){
+        $token = str_random(60);
+        $oldToken = DB::table('password_resets')->where('email',$email)->first();
+
+        if($oldToken){
+            DB::table('password_resets')->where('email',$email)->update([
+                'token' => $token,
+                'created_at' => DB::raw('now()')
+            ]);
+        }
+        else{
+            DB::table('password_resets')->insert([
+                'email' => $email,
+                'token' => $token,
+                'created_at' => DB::raw('now()')
+            ]);
+        }
+
+        return $token;
     }
 
     public function validateEmail($email){
